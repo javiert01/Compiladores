@@ -25,14 +25,29 @@ false {
 ";" {
       return END;
     }
-"," |
-":" |
-"(" |
-")" |
-"[" |
-"]" |
-"{" |
-"}" |
+":" {
+      return DOS_PTOS;
+    }
+"[" { 
+      return CORCH_AB;
+    }
+"]"  { 
+      return CORCH_CERR;
+    }
+"," { return COMA;
+    }
+"(" { 
+      return PAR_AB;
+    }
+")" { 
+      return PAR_CERR;
+    }
+"{" {
+      return LLAV_AB;
+    }
+"}" {
+      return LLAV_CERR;
+    }
 "+" |
 "-" |
 "*" |
@@ -70,5 +85,6 @@ false {
 \n {num_lineas++;}
 . {printf("Error en linea %d\n ",num_lineas);}
 %%
+
 //este es un comentario nuevo
 //este es un nuevo comentario XD
