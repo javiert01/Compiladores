@@ -4,27 +4,30 @@
 #define YYSTYPE char*
 %}
 
-%token TIPO_DATO ID ASIGNACION VALOR END PALABRA_RESERVADA BOOL CAR_ESPECIAL OP_COMPUESTO
+%token TIPO_DATO ID ASIGNACION VALOR END DOS_PTOS COR_AB COR_CERR 
 
 %%
-declar_var : TIPO_DATO ID END '\n'
-           | TIPO_DATO ID ASIGNACION VALOR END '\n'
-           | TIPO_DATO ID ASIGNACION ID END '\n' {printf("\n >>Declaracion de Variable\n");}
+var_global: TIPO_DATO DOS_PTOS ID END
+           | TIPO_DATO ID ASIGNACION VALOR END
+           | TIPO_DATO ID ASIGNACION ID END
 ;
 
-%%
-int main(int argc,char *argv[])
+vector: TIPO_DATO DOS_PTOS ID COR_AB VALOR COR_CERR END;
 
-{
- yyparse();
+%%
+int main() {
+   yyparse();
 }
- 
-yyerror (char *s)
+
+yyerror (s)
+     char *s;
 {
-  printf ("%s\n", s);
+  fprintf (stderr, "%s\n", s);
 }
 
 int yywrap()  
 {  
    return 1;  
 }  
+ 
+
