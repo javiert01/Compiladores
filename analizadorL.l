@@ -71,3 +71,4 @@ false {
 . {printf("Error en linea %d\n ",num_lineas);}
 %%
 //este es un comentario nuevo
+//este es un nuevo comentario XD
