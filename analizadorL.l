@@ -14,10 +14,30 @@ int num_lineas = 1;
 int|float|bool|char|string {
                              return TIPO_DATO;
                            }
-if|then|else|while |
-do|input|output|return  {
-                           return PALABRA_RESERVADA;
-                        }  
+if {
+     return IF;
+   }
+then{
+     return THEN;
+   }
+else{
+     return ELSE;
+   }
+while {
+     return WHILE;
+   }
+do {
+     return DO;
+   }
+input {
+     return INPUT;
+   }
+output{
+     return OUTPUT;
+   }
+return{
+     return RETURN;
+   }  
 true | 
 false {
         return BOOL;
@@ -48,28 +68,33 @@ false {
 "}" {
       return LLAV_CERR;
     }
-"+" |
-"-" |
-"*" |
-"/" |
-"<" |
-">" |
-"!" |
-"&" |
+
 "$" {
      return CAR_ESPECIAL;
     }
 "=" {
      return ASIGNACION;
     }
+"+" |
+"-" |
+"*" |
+"/" {
+     return OP_AR;
+    }
+"<" |
+">" |
 "<=" | 
 ">=" |
 "==" |
-"!=" |
-"&&" |
-"||" {
-      return OP_COMPUESTO;
+"!=" {
+       return OP_REL;
      }
+"&&" |
+"!"  |
+"||" {
+      return OP_LOG;
+     }
+
 [a-zA-Z_]+[a-zA-Z0-9_]*  {
                            return ID;
                          }
@@ -85,6 +110,3 @@ false {
 \n {num_lineas++;}
 . {printf("Error en linea %d\n ",num_lineas);}
 %%
-
-//este es un comentario nuevo
-//este es un nuevo comentario XD
