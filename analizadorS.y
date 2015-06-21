@@ -27,7 +27,7 @@ encabezado : TIPO_DATO DOS_PTOS ID PAR_AB lista PAR_CERR
            | TIPO_DATO DOS_PTOS ID PAR_AB PAR_CERR
 ;
 lista : variable
-       | lista COMA variable
+       | variable COMA lista
 ;
 listaDecl : var_global
           | listaDecl '\n' var_global
