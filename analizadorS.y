@@ -15,28 +15,10 @@ THEN TIPO_DATO VALOR WHILE
 linea: '\n'
       | error '\n' {yyerrorok;}
 ;
-variable: TIPO_DATO DOS_PTOS ID
-;
-var_global : variable END
-;
-vector : variable CORCH_AB VALOR CORCH_CERR
-;
-funcion : encabezado bloque_comando
-;
-encabezado : TIPO_DATO DOS_PTOS ID PAR_AB lista PAR_CERR
-           | TIPO_DATO DOS_PTOS ID PAR_AB PAR_CERR
-;
-lista : variable
-       | variable COMA lista
-;
-listaDecl : var_global
-          | listaDecl '\n' var_global
+atrb: variable ASIGNACION expr
+     | variable CORCH_AB expr CORCH_CERR ASIGNACION expr 
 ;
 bloque_comando : LLAV_AB secuencia LLAV_CERR
-;
-secuencia : 
-           | com_sim 
-           | secuencia END com_sim
 ;
 com_sim : atrb 
         | control_flujo
@@ -47,10 +29,14 @@ com_sim : atrb
         | op_entrada
         | op_retorno
 ;
-atrb: variable ASIGNACION expr
-     | variable CORCH_AB expr CORCH_CERR ASIGNACION expr 
+control_flujo : IF PAR_AB expr_log PAR_CERR THEN com_sim
+              | IF PAR_AB expr_log PAR_CERR THEN com_sim ELSE com_sim
+              | WHILE PAR_AB expr_log PAR_CERR DO com_sim
+              | DO com_sim WHILE PAR_AB expr_log PAR_CERR
 ;
-
+encabezado : TIPO_DATO DOS_PTOS ID PAR_AB lista PAR_CERR
+           | TIPO_DATO DOS_PTOS ID PAR_AB PAR_CERR
+;
 expr : expr_ar
      | expr_log
 ;
@@ -67,10 +53,17 @@ expr_log : expr_ar OP_REL expr_ar
           | ID OP_REL ID
           | ID OP_REL VALOR
 ;
-control_flujo : IF PAR_AB expr_log PAR_CERR THEN com_sim
-              | IF PAR_AB expr_log PAR_CERR THEN com_sim ELSE com_sim
-              | WHILE PAR_AB expr_log PAR_CERR DO com_sim
-              | DO com_sim WHILE PAR_AB expr_log PAR_CERR
+funcion : encabezado bloque_comando
+;
+lista : variable
+       | variable COMA lista
+;
+listaDecl : var_global
+          | listaDecl '\n' var_global
+;
+secuencia : 
+           | com_sim 
+           | secuencia END com_sim
 ;
 llamada_func : ID PAR_AB ID PAR_CERR 
 ;
@@ -83,7 +76,12 @@ op_retorno : RETURN PAR_AB expr PAR_CERR END
            | RETURN VALOR END
            | RETURN ID END
 ;
-
+variable: TIPO_DATO DOS_PTOS ID
+;
+var_global : variable END
+;
+vector : variable CORCH_AB VALOR CORCH_CERR
+;
 
 %%
 int main(int argc,char **argv) {
