@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #define YYSTYPE char*
+extern FILE *yyin;
 %}
 
 %token TIPO_DATO ID ASIGNACION VALOR END DOS_PTOS CORCH_AB CORCH_CERR 
@@ -34,19 +35,25 @@ sent_control_while	: WHILE ABR_PAR expr CIERRA_PAR
 ;
 
 %%
-int main() {
+int main(int argc,char **argv) {
+   if(argc>1)
+     yyin=fopen(argv[1],"rt");
+   else
+   yyin=fopen("codigo.txt","rt");
    yyparse();
+   return 0;
 }
 
-yyerror (s)
-     char *s;
+yyerror (char *s)
 {
-  fprintf (stderr, "%s\n", s);
+  printf ("Error Sintactico %s\n", s);
 }
 
 int yywrap()  
 {  
    return 1;  
-}  
+}   
+ 
+
  
 
