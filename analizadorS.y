@@ -134,3 +134,50 @@ int yywrap()
 {  
    return 1;  
 } 
+
+void yyerror (const char *s)
+{
+  fprintf(stderr, "%s line: %d",s, yylloc.first_line);
+}
+
+//desde esta linea
+//prueba con yyerror para mostrar error en linea
+//********************//
+/*void yyerror(char *s)
+{
+  va_list ap;
+  va_start(ap, s);
+  
+  if(yylloc.first_line)
+  {
+    fprintf(stderr, "%d.%d-%d.%d: error: ", yylloc.first_line, yylloc.first_column,
+	    yyloc.last_line, yylloc.last_column);
+	    
+  }
+  vfprintf(stderr, s, ap);
+  fprintf(stderr, "\n");
+}
+
+void lyyerror(YYLTYPE t, char *s)
+{
+  va_list ap;
+  va_start(ap, s);
+  
+  if(t.first_line)
+  {
+    fprintf(stderr, "%d.%d-%d.%d: error: ", t.first_line, t.first_column,
+	    t.last_line, t.last_column);
+	    
+  }
+  vfprintf(stderr, s, ap);
+  fprintf(stderr, "\n");
+}
+void yyerror (char *s)
+{
+  fprintf (stderr, "Error Sintactico en linea %d:  %s\n", yylineno, s);
+}
+yyerror (char *s)
+{
+  printf ("Error Sintactico %s\n", s);
+}*/
+////*************************///////////
