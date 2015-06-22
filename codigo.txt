@@ -1,0 +1,20 @@
+int main(){
+float: x=true;
+int: v[8];
+y="Hola Mundo";
+z=8;
+float: x[8];
+float: abc;
+if(5<9) then r=8;
+sumar(t,o);
+if(3<9 && 9<=7) then x=7;
+while (x!=9 || a>b) do x=8;
+do z=y; 
+while (z>y)
+}
+
+int sumar(int:x,int:y){
+int: z;
+z=x+y;
+return z;
+}
