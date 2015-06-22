@@ -5,83 +5,117 @@
 extern FILE *yyin;
 %}
 
-%token ASIGNACION BOOL CAR_ESPECIAL COMA CORCH_AB CORCH_CERR DOS_PTOS DO 
-END ELSE ID IF INPUT LLAV_AB LLAV_CERR
-OPERADOR OP_COMPUESTO OP_AR OP_REL OP_LOG OUTPUT 
-PALABRA_RESERVADA PAR_AB PAR_CERR RETURN  
-THEN TIPO_DATO VALOR WHILE 
+%token ASIGNACION CAR_ESPECIAL COMA CORCH_AB CORCH_CERR DOS_PTOS DO 
+END ELSE ID IF INPUT LLAV_AB LLAV_CERR MAYOR MENOR MAYOR_IGUAL MENOR_IGUAL IGUAL NO_IGUAL SUM RES MULT DIV 
+OP_LOG OUTPUT PALABRA_RESERVADA PAR_AB PAR_CERR RETURN THEN WHILE MAIN V_INT V_FLOAT V_STRING V_BOOL V_CHAR 
+T_INT T_FLOAT T_STRING T_BOOL T_CHAR  
 
 %%
-linea: '\n'
-      | error '\n' {yyerrorok;}
+programa : principal funciones
+         | principal
 ;
-atrb: variable ASIGNACION expr
-     | variable CORCH_AB expr CORCH_CERR ASIGNACION expr 
+principal : T_INT MAIN PAR_AB PAR_CERR LLAV_AB cmd_simples LLAV_CERR
 ;
-bloque_comando : LLAV_AB secuencia LLAV_CERR
+cmd_simples : cmd_simple
+            | /* comando vacio*/
 ;
-com_sim : atrb 
-        | control_flujo
-        | listaDecl
-        | llamada_func
-        | bloque_comando
-        | op_salida
-        | op_entrada
-        | op_retorno
+cmd_simple : atribucion END 
+           | control_flujo 
+           | llamada_func END
 ;
-control_flujo : IF PAR_AB expr_log PAR_CERR THEN com_sim
-              | IF PAR_AB expr_log PAR_CERR THEN com_sim ELSE com_sim
-              | WHILE PAR_AB expr_log PAR_CERR DO com_sim
-              | DO com_sim WHILE PAR_AB expr_log PAR_CERR
+llamada_func : ID PAR_AB parametros PAR_CERR
 ;
-encabezado : TIPO_DATO DOS_PTOS ID PAR_AB lista PAR_CERR
-           | TIPO_DATO DOS_PTOS ID PAR_AB PAR_CERR
+parametros : par_f
+           | /* vacio */
 ;
-expr : expr_ar
-     | expr_log
+par_f : par COMA par
+      | par
 ;
-expr_ar : VALOR OP_AR VALOR
-         | VALOR OP_AR ID
-         | ID OP_AR ID
-         | ID OP_AR VALOR
-         | expr_ar OP_AR expr_ar
+par : valor 
+    | ID
 ;
-expr_log : expr_ar OP_REL expr_ar
-          | expr_log OP_LOG expr_log
-          | VALOR OP_REL VALOR
-          | VALOR OP_REL ID
-          | ID OP_REL ID
-          | ID OP_REL VALOR
+valor : V_INT 
+      | V_FLOAT
+      | V_STRING 
+      | V_BOOL 
+      | V_CHAR
 ;
-funcion : encabezado bloque_comando
+declar_var : tipo_dato DOS_PTOS ID
+           | tipo_dato DOS_PTOS ID atribucion
 ;
-lista : variable
-       | variable COMA lista
+tipo_dato : T_INT
+          | T_FLOAT
+          | T_BOOL
+          | T_CHAR
+          | T_STRING
 ;
-listaDecl : var_global
-          | listaDecl '\n' var_global
+asignar_valor : ASIGNACION expr_asg
+              | ASIGNACION valor
+              | ASIGNACION ID
 ;
-secuencia : 
-           | com_sim 
-           | secuencia END com_sim
+expr_asg : expr_artm
+     | llamada_func
 ;
-llamada_func : ID PAR_AB ID PAR_CERR 
+expr_artm : expr_comun
+          | expr_comun expr_complemento 
 ;
-op_entrada: INPUT PAR_AB ID PAR_CERR END
-; 
-op_salida : OUTPUT PAR_AB expr PAR_CERR END
-          | OUTPUT PAR_AB VALOR PAR_CERR END
+expr_comun : valor tipo_op valor
+           | valor tipo_op ID 
+           | ID tipo_op valor
+           | ID tipo_op ID
 ;
-op_retorno : RETURN PAR_AB expr PAR_CERR END
-           | RETURN VALOR END
-           | RETURN ID END
+tipo_op : SUM
+        | RES
+        | MULT
+        | DIV
 ;
-variable: TIPO_DATO DOS_PTOS ID
+expr_complemento : expr_complemento operador_com
+                 | operador_com
 ;
-var_global : variable END
+operador_com : tipo_op valor
+             | tipo_op ID
 ;
-vector : variable CORCH_AB VALOR CORCH_CERR
+atribucion : ID ASIGNACION c_valor
 ;
+c_valor : valor
+        | expr_asg
+        | ID
+;
+control_flujo : condicion_if
+              | condicion_while
+;
+condicion_if : condicion_simple
+             | condicion_simple condicion_else
+;
+condicion_while : expr_while expr_do
+                | expr_do expr_while 
+;
+condicion_simple : IF PAR_AB expr_log PAR_CERR THEN cmd_simples
+;
+expr_log : valor op_relacional valor
+         | ID op_relacional ID
+         | ID op_relacional valor
+         | valor op_relacional ID
+;
+op_relacional : MAYOR
+             | MENOR
+             | MAYOR_IGUAL
+             | MENOR_IGUAL
+             | IGUAL
+             | NO_IGUAL
+;  
+condicion_else : ELSE cmd_simples
+;
+expr_while : WHILE PAR_AB expr_log PAR_CERR 
+;
+expr_do : DO cmd_simples
+;
+funciones : funciones funcion
+          | funcion
+;
+funcion : tipo_dato ID PAR_AB parametros PAR_CERR LLAV_AB cmd_simples LLAV_CERR
+;
+
 
 %%
 int main(int argc,char **argv) {
@@ -92,14 +126,11 @@ int main(int argc,char **argv) {
    yyparse();
    return 0;
 }
-
 yyerror (char *s)
 {
   printf ("Error Sintactico %s\n", s);
 }
-
 int yywrap()  
 {  
    return 1;  
-}   
- 
+} 
