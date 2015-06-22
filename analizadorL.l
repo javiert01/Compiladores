@@ -1,7 +1,7 @@
 %{
 #include <string.h>
 #include "analizadorS.tab.h"
-int num_lineas = 1;
+num_lineas = 1;
 %}
 %x comentario
 %%
