@@ -1,7 +1,7 @@
 %{
 #include <string.h>
 #include "analizadorS.tab.h"
-num_lineas = 1;
+int num_lineas = 1;
 %}
 %x comentario
 %%
@@ -120,10 +120,14 @@ false {
 "!=" {
        return NO_IGUAL;
      }
-"&&" |
-"!"  |
+"&&" {
+      return AND;
+      }
+"!"  {
+      return NOT;
+      }
 "||" {
-      return OP_LOG;
+      return OR;
      }
 
 [a-zA-Z_]+[a-zA-Z0-9_]*  {
