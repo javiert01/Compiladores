@@ -94,7 +94,7 @@ false {
       return SUM;
     }
 "-" {
-      return RES;
+      return MENOS;
     }
 "*" {
       return MULT;
@@ -133,10 +133,10 @@ false {
 [a-zA-Z_]+[a-zA-Z0-9_]*  {
                            return ID;
                          }
-[-]?[0-9]+ { 
+[0-9]+ { 
              return V_INT;
            }
-[-]?[0-9]*[.][0-9]+ {
+[0-9]*[.][0-9]+ {
                       return V_FLOAT;
                     }
 ['].['] {
